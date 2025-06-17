@@ -1,9 +1,7 @@
 package de.hitec.nhplus.utils;
 
-import de.hitec.nhplus.datastorage.ConnectionBuilder;
-import de.hitec.nhplus.datastorage.DaoFactory;
-import de.hitec.nhplus.datastorage.PatientDao;
-import de.hitec.nhplus.datastorage.TreatmentDao;
+import de.hitec.nhplus.datastorage.*;
+import de.hitec.nhplus.model.Nurses;
 import de.hitec.nhplus.model.Patient;
 import de.hitec.nhplus.model.Treatment;
 
@@ -114,6 +112,10 @@ public class SetUpDB {
         } catch (SQLException exception) {
             exception.printStackTrace();
         }
+    }
+
+    private static void setUpNurse() {
+        NursesDao dao = DaoFactory.getDaoFactory().createNursesDAO();
     }
 
     public static void main(String[] args) {

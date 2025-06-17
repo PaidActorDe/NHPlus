@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="de.hitec.nhplus.controller.AllNursesController">
+    <TableView fx:id="tableView" layoutX="10" layoutY="10" prefWidth="580" prefHeight="400">
+        <columns>
+            <TableColumn fx:id="columnId" text="ID" />
+            <TableColumn fx:id="columnFirstName" text="Vorname" />
+            <TableColumn fx:id="columnLastName" text="Nachname" />
+            <TableColumn fx:id="columnPhoneNumber" text="Telefonnummer" />
+        </columns>
+    </TableView>
+</AnchorPane>
