@@ -1,7 +1,6 @@
 package de.hitec.nhplus;
 
 import de.hitec.nhplus.datastorage.ConnectionBuilder;
-
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -18,7 +17,30 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
         this.primaryStage = primaryStage;
-        mainWindow();
+        showLoginWindow();
+    }
+
+    private void showLoginWindow() {
+        try {
+            FXMLLoader loader = new FXMLLoader(Main.class.getResource("/de/hitec/nhplus/LoginView.fxml"));
+            Scene loginScene = new Scene(loader.load());
+            Stage loginStage = new Stage();
+            loginStage.setTitle("Login");
+            loginStage.setScene(loginScene);
+            loginStage.setResizable(false);
+
+            // Zugriff auf den LoginController
+            de.hitec.nhplus.controller.LoginController loginController = loader.getController();
+            loginController.setLoginStage(loginStage);
+            loginController.setOnLoginSuccess(() -> {
+                loginStage.close();
+                mainWindow();
+            });
+
+            loginStage.show();
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
     }
 
     public void mainWindow() {
