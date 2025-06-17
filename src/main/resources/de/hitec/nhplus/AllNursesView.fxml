@@ -1,21 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="de.hitec.nhplus.controller.AllNursesController">
 
-<AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="de.hitec.nhplus.controller.AllNursesController">
-    <TableView fx:id="tableView" layoutX="10" layoutY="10" prefWidth="580" prefHeight="400">
-        <columns>
-            <TableColumn fx:id="columnId" text="ID" />
-            <TableColumn fx:id="columnFirstName" text="Vorname" />
-            <TableColumn fx:id="columnLastName" text="Nachname" />
-            <TableColumn fx:id="columnPhoneNumber" text="Telefonnummer" />
-        </columns>
-    </TableView>
-</AnchorPane>
+    <!-- Tabellenansicht in der Mitte -->
+    <center>
+        <TableView fx:id="tableView">
+            <columns>
+                <TableColumn fx:id="columnId" text="NID" prefWidth="50"/>
+                <TableColumn fx:id="columnFirstName" text="Vorname" prefWidth="150"/>
+                <TableColumn fx:id="columnLastName" text="Nachname" prefWidth="150"/>
+                <TableColumn fx:id="columnPhoneNumber" text="Telefon" prefWidth="150"/>
+            </columns>
+        </TableView>
+    </center>
+
+    <!-- Eingabe- und Buttonbereich unten -->
+    <bottom>
+        <VBox spacing="10.0">
+            <padding>
+                <Insets top="10.0" right="15.0" bottom="10.0" left="15.0"/>
+            </padding>
+
+            <!-- Textfelder für Eingaben -->
+            <HBox spacing="10.0">
+                <TextField fx:id="firstNameField" promptText="Vorname" prefWidth="150"/>
+                <TextField fx:id="lastNameField" promptText="Nachname" prefWidth="150"/>
+                <TextField fx:id="phoneField" promptText="Telefonnummer" prefWidth="150"/>
+            </HBox>
+
+            <!-- Buttons zum Steuern -->
+            <HBox spacing="10.0" alignment="CENTER">
+                <Button text="Hinzufügen" onAction="#onAddClicked" />
+                <Button text="Bearbeiten" onAction="#onEditClicked" />
+                <Button text="Löschen" onAction="#onDeleteClicked" />
+            </HBox>
+        </VBox>
+    </bottom>
+</BorderPane>

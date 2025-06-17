@@ -28,7 +28,11 @@ public abstract class DaoImp<T> implements Dao<T> {
 
     @Override
     public List<T> readAll() throws SQLException {
-        return getListFromResultSet(getReadAllStatement().executeQuery());
+        PreparedStatement stmt = getReadAllStatement();
+        if (stmt == null) {
+            throw new SQLException("PreparedStatement ist null – evtl. ist die Datenbankverbindung geschlossen.");
+        }
+        return getListFromResultSet(stmt.executeQuery());
     }
 
     @Override

@@ -89,15 +89,14 @@ public class PatientDao extends DaoImp<Patient> {
      */
     @Override
     protected PreparedStatement getReadAllStatement() {
-        PreparedStatement statement = null;
         try {
-            final String SQL = "SELECT * FROM patient";
-            statement = this.connection.prepareStatement(SQL);
-        } catch (SQLException exception) {
-            exception.printStackTrace();
+            return connection.prepareStatement("SELECT * FROM patient");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null; // wird in readAll() dann abgefangen
         }
-        return statement;
     }
+
 
     /**
      * Maps a <code>ResultSet</code> of all patients to an <code>ArrayList</code> of <code>Patient</code> objects.

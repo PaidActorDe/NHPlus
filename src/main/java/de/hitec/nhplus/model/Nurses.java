@@ -1,28 +1,29 @@
 package de.hitec.nhplus.model;
 
-public class Nurses extends Person {
-    private String nurseId;
-    private String department;
+public class Nurses {
+    private long nid;
+    private String surname;
+    private String firstName;
+    private String phone;
 
-    public Nurses(String name, String firstName, String nurseId, String department) {
-        super(name, firstName);
-        this.nurseId = nurseId;
-        this.department = department;
+    public Nurses(long nid, String surname, String firstName, String phone) {
+        this.nid = nid;
+        this.surname = surname;
+        this.firstName = firstName;
+        this.phone = phone;
     }
 
-    public String getNurseId() {
-        return nurseId;
+    public Nurses(String surname, String firstName, long nid, String phone) {
+        this(nid, surname, firstName, phone);
     }
 
-    public void setNurseId(String nurseId) {
-        this.nurseId = nurseId;
-    }
-
-    public String getDepartment() {
-        return department;
-    }
-
-    public void setDepartment(String department) {
-        this.department = department;
-    }
+    // Getter/Setter
+    public long getNid() { return nid; }
+    public void setNid(long nid) { this.nid = nid; }
+    public String getSurname() { return surname; }
+    public void setSurname(String surname) { this.surname = surname; }
+    public String getFirstName() { return firstName; }
+    public void setFirstName(String firstName) { this.firstName = firstName; }
+    public String getPhone() { return phone; }
+    public void setPhone(String phone) { this.phone = phone; }
 }

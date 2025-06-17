@@ -6,103 +6,69 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NursesDao extends DaoImp<Nurses> {
+public class NursesDao {
+    private final Connection connection;
 
     public NursesDao(Connection connection) {
-        super(connection);
+        this.connection = connection;
     }
 
-    @Override
-    protected PreparedStatement getCreateStatement(Nurses nurse) {
-        PreparedStatement preparedStatement = null;
-        try {
-            final String SQL = "INSERT INTO nurses (surname, firstname, phone) VALUES (?, ?, ?)";
-            preparedStatement = this.connection.prepareStatement(SQL);
-            preparedStatement.setString(1, nurse.getSurname());
-            preparedStatement.setString(2, nurse.getFirstName());
-            preparedStatement.setString(3, nurse.getDepartment()); // Assuming phone is stored in `department`
-        } catch (SQLException exception) {
-            exception.printStackTrace();
+    public long createAndReturnId(Nurses nurse) throws SQLException {
+        String insertSQL = "INSERT INTO nurses(surname, firstName, phone) VALUES (?, ?, ?)";
+        String idSQL = "SELECT last_insert_rowid()";
+
+        try (
+                PreparedStatement insertStmt = connection.prepareStatement(insertSQL);
+                PreparedStatement idStmt = connection.prepareStatement(idSQL)
+        ) {
+            insertStmt.setString(1, nurse.getSurname());
+            insertStmt.setString(2, nurse.getFirstName());
+            insertStmt.setString(3, nurse.getPhone());
+            insertStmt.executeUpdate();
+
+            try (ResultSet rs = idStmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getLong(1);
+                } else {
+                    throw new SQLException("ID konnte nicht abgefragt werden.");
+                }
+            }
         }
-        return preparedStatement;
     }
 
-    @Override
-    protected PreparedStatement getReadByIDStatement(long nid) {
-        PreparedStatement preparedStatement = null;
-        try {
-            final String SQL = "SELECT * FROM nurses WHERE nid = ?";
-            preparedStatement = this.connection.prepareStatement(SQL);
-            preparedStatement.setLong(1, nid);
-        } catch (SQLException exception) {
-            exception.printStackTrace();
+    public List<Nurses> readAll() throws SQLException {
+        List<Nurses> result = new ArrayList<>();
+        String sql = "SELECT * FROM nurses";
+        try (PreparedStatement stmt = connection.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                result.add(new Nurses(
+                        rs.getLong("nid"),
+                        rs.getString("surname"),
+                        rs.getString("firstName"),
+                        rs.getString("phone")
+                ));
+            }
         }
-        return preparedStatement;
+        return result;
     }
 
-    @Override
-    protected Nurses getInstanceFromResultSet(ResultSet result) throws SQLException {
-        return new Nurses(
-                result.getString("surname"),
-                result.getString("firstname"),
-                result.getString("nid"),
-                result.getString("phone")
-        );
-    }
-
-    @Override
-    protected PreparedStatement getReadAllStatement() {
-        PreparedStatement statement = null;
-        try {
-            final String SQL = "SELECT * FROM nurses";
-            statement = this.connection.prepareStatement(SQL);
-        } catch (SQLException exception) {
-            exception.printStackTrace();
+    public void update(Nurses nurse) throws SQLException {
+        String sql = "UPDATE nurses SET surname = ?, firstName = ?, phone = ? WHERE nid = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, nurse.getSurname());
+            stmt.setString(2, nurse.getFirstName());
+            stmt.setString(3, nurse.getPhone());
+            stmt.setLong(4, nurse.getNid());
+            stmt.executeUpdate();
         }
-        return statement;
     }
 
-    @Override
-    protected ArrayList<Nurses> getListFromResultSet(ResultSet result) throws SQLException {
-        ArrayList<Nurses> list = new ArrayList<>();
-        while (result.next()) {
-            Nurses nurse = new Nurses(
-                    result.getString("surname"),
-                    result.getString("firstName"),
-                    result.getString("nurseId"),
-                    result.getString("department")
-            );
-            list.add(nurse);
+    public void deleteById(long id) throws SQLException {
+        String sql = "DELETE FROM nurses WHERE nid = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setLong(1, id);
+            stmt.executeUpdate();
         }
-        return list;
-    }
-
-    @Override
-    protected PreparedStatement getUpdateStatement(Nurses nurse) {
-        PreparedStatement preparedStatement = null;
-        try {
-            final String SQL = "UPDATE nurses SET surname = ?, firstname = ?, phone = ? WHERE nid = ?";
-            preparedStatement = this.connection.prepareStatement(SQL);
-            preparedStatement.setString(1, nurse.getSurname());
-            preparedStatement.setString(2, nurse.getFirstName());
-            preparedStatement.setString(3, nurse.getDepartment()); // Assuming phone is stored in `department`
-            preparedStatement.setString(4, nurse.getNurseId());
-        } catch (SQLException exception) {
-            exception.printStackTrace();
-        }
-        return preparedStatement;
-    }
-
-    @Override
-    protected PreparedStatement getDeleteStatement(long nid) {
-        PreparedStatement preparedStatement = null;
-        try {
-            final String SQL = "DELETE FROM nurses WHERE nid = ?";
-            preparedStatement = this.connection.prepareStatement(SQL);
-            preparedStatement.setLong(1, nid);
-        } catch (SQLException exception) {
-            exception.printStackTrace();
-        }
-        return preparedStatement;
     }
 }
